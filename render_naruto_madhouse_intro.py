@@ -53,73 +53,35 @@ def draw_speed_lines(draw, cx, cy, num_lines=36, color=(255, 255, 255, 40)):
         y2 = cy + int(r_outer * math.sin(angle))
         draw.line([x1, y1, x2, y2], fill=(255, 255, 255), width=3)
 
-def draw_character_max(draw, cx, cy, pulse=1.0):
-    """Renders Max Thornton (Hyperactive Genius) stylized character portrait"""
-    # Lightning Aura (Cyan/Yellow)
-    aura_r = int(220 * pulse)
-    draw.ellipse([cx - aura_r, cy - aura_r, cx + aura_r, cy + aura_r], outline=NEON_CYAN, width=6)
-    
-    # Body Silhouette & Lab Coat
-    draw.polygon([(cx - 140, cy + 300), (cx - 100, cy + 80), (cx + 100, cy + 80), (cx + 140, cy + 300)], fill=(240, 240, 250), outline=(0, 0, 0), width=5)
-    
-    # Head & Wild Hair
-    draw.ellipse([cx - 90, cy - 110, cx + 90, cy + 70], fill=(240, 200, 160), outline=(0, 0, 0), width=4) # Face
-    # Wild Spiky Hair
-    hair_spikes = [(cx-110, cy-70), (cx-90, cy-150), (cx-40, cy-170), (cx, cy-190), (cx+40, cy-170), (cx+90, cy-150), (cx+110, cy-70)]
-    draw.polygon(hair_spikes, fill=(100, 60, 30), outline=(0, 0, 0), width=4)
+# Character Art PNG Paths
+CHAR_MAX_PATH = Path("/Users/apple/Documents/products/madhouse-comic-screenplay/character_assets/max_thornton.png")
+CHAR_LEO_PATH = Path("/Users/apple/Documents/products/madhouse-comic-screenplay/character_assets/leo_vance.png")
+CHAR_GUPTA_PATH = Path("/Users/apple/Documents/products/madhouse-comic-screenplay/character_assets/mr_gupta.png")
 
-    # Goggles with Glowing Lenses
-    draw.rectangle([cx - 75, cy - 40, cx - 15, cy + 10], fill=NEON_CYAN, outline=(0, 0, 0), width=4)
-    draw.rectangle([cx + 15, cy - 40, cx + 75, cy + 10], fill=NEON_CYAN, outline=(0, 0, 0), width=4)
-    draw.line([cx - 15, cy - 15, cx + 15, cy - 15], fill=(0, 0, 0), width=6)
+IMG_MAX = Image.open(CHAR_MAX_PATH).convert("RGBA") if CHAR_MAX_PATH.exists() else None
+IMG_LEO = Image.open(CHAR_LEO_PATH).convert("RGBA") if CHAR_LEO_PATH.exists() else None
+IMG_GUPTA = Image.open(CHAR_GUPTA_PATH).convert("RGBA") if CHAR_GUPTA_PATH.exists() else None
 
-    # Smirk & Soot Mark
-    draw.arc([cx - 30, cy + 10, cx + 30, cy + 45], start=10, end=170, fill=(0, 0, 0), width=5)
-    draw.ellipse([cx + 35, cy + 15, cx + 55, cy + 35], fill=(80, 80, 80)) # Soot
+def draw_character_max(img, cx, cy, pulse=1.0):
+    """Pastes Max Thornton PNG character artwork onto frame"""
+    if IMG_MAX:
+        w, h = int(550 * pulse), int(640 * pulse)
+        resized = IMG_MAX.resize((w, h), Image.Resampling.LANCZOS)
+        img.paste(resized, (cx - w//2, cy - h//2), resized)
 
-def draw_character_leo(draw, cx, cy, pulse=1.0):
-    """Renders Leo Vance (Deadpan Roommate) stylized character portrait"""
-    # Shadow Aura (Purple/Dark Blue)
-    aura_r = int(220 * pulse)
-    draw.ellipse([cx - aura_r, cy - aura_r, cx + aura_r, cy + aura_r], outline=NEON_PINK, width=6)
+def draw_character_leo(img, cx, cy, pulse=1.0):
+    """Pastes Leo Vance PNG character artwork onto frame"""
+    if IMG_LEO:
+        w, h = int(550 * pulse), int(640 * pulse)
+        resized = IMG_LEO.resize((w, h), Image.Resampling.LANCZOS)
+        img.paste(resized, (cx - w//2, cy - h//2), resized)
 
-    # Bathrobe Body
-    draw.polygon([(cx - 150, cy + 300), (cx - 100, cy + 80), (cx + 100, cy + 80), (cx + 150, cy + 300)], fill=(30, 35, 55), outline=(0, 0, 0), width=5)
-    
-    # Head & Sleek Dark Hair
-    draw.ellipse([cx - 85, cy - 100, cx + 85, cy + 70], fill=(230, 190, 150), outline=(0, 0, 0), width=4)
-    draw.ellipse([cx - 95, cy - 140, cx + 95, cy - 30], fill=(20, 20, 25)) # Sleek Hair
-
-    # Cool Sunglasses & Espresso Cup
-    draw.rectangle([cx - 70, cy - 30, cx + 70, cy + 10], fill=(0, 0, 0)) # Shades
-    draw.line([cx - 30, cy + 35, cx + 30, cy + 35], fill=(0, 0, 0), width=4) # Cool flat mouth
-
-    # Espresso Cup
-    draw.rectangle([cx + 90, cy + 120, cx + 150, cy + 190], fill=(255, 255, 255), outline=(0, 0, 0), width=4)
-    draw.arc([cx + 140, cy + 135, cx + 175, cy + 175], start=270, end=90, fill=(0, 0, 0), width=4)
-
-def draw_character_gupta(draw, cx, cy, pulse=1.0):
-    """Renders Mr. Baldev Gupta (Furious Landlord) stylized character portrait"""
-    # Flame Red Aura
-    aura_r = int(230 * pulse)
-    draw.ellipse([cx - aura_r, cy - aura_r, cx + aura_r, cy + aura_r], outline=FLAME_RED, width=8)
-
-    # Cardigan Body
-    draw.polygon([(cx - 160, cy + 300), (cx - 110, cy + 90), (cx + 110, cy + 90), (cx + 160, cy + 300)], fill=(120, 40, 30), outline=(0, 0, 0), width=5)
-
-    # Head & Shifting Toupee
-    draw.ellipse([cx - 95, cy - 90, cx + 95, cy + 80], fill=(240, 180, 140), outline=(0, 0, 0), width=4)
-    # Crooked Toupee (Flying off slightly)
-    draw.ellipse([cx - 70, cy - 150, cx + 50, cy - 80], fill=(50, 35, 25), outline=(0, 0, 0), width=4)
-
-    # Angry Eyes & Vein
-    draw.line([cx - 60, cy - 25, cx - 15, cy - 5], fill=(0, 0, 0), width=6) # Angry Eyebrow L
-    draw.line([cx + 15, cy - 5, cx + 60, cy - 25], fill=(0, 0, 0), width=6) # Angry Eyebrow R
-    draw.ellipse([cx - 45, cy - 5, cx - 30, cy + 10], fill=FLAME_RED)
-    draw.ellipse([cx + 30, cy - 5, cx + 45, cy + 10], fill=FLAME_RED)
-
-    # Open Yelling Mouth
-    draw.ellipse([cx - 35, cy + 25, cx + 35, cy + 65], fill=(150, 20, 20), outline=(0, 0, 0), width=4)
+def draw_character_gupta(img, cx, cy, pulse=1.0):
+    """Pastes Mr. Baldev Gupta PNG character artwork onto frame"""
+    if IMG_GUPTA:
+        w, h = int(550 * pulse), int(640 * pulse)
+        resized = IMG_GUPTA.resize((w, h), Image.Resampling.LANCZOS)
+        img.paste(resized, (cx - w//2, cy - h//2), resized)
 
 def render_frame(frame_idx: int) -> Image.Image:
     t = frame_idx / FPS
@@ -144,7 +106,7 @@ def render_frame(frame_idx: int) -> Image.Image:
     # 2. CHARACTER 1: MAX THORNTON (3.0s - 6.0s)
     elif t < 6.0:
         draw_speed_lines(draw, cx, cy, color=NEON_CYAN)
-        draw_character_max(draw, cx, cy, pulse=pulse)
+        draw_character_max(img, cx, cy, pulse=pulse)
 
         # Character Card Overlay
         draw.polygon([(0, 1250), (WIDTH, 1180), (WIDTH, 1550), (0, 1620)], fill=(16, 24, 40), outline=NEON_CYAN, width=6)
@@ -155,7 +117,7 @@ def render_frame(frame_idx: int) -> Image.Image:
     # 3. CHARACTER 2: LEO VANCE (6.0s - 9.0s)
     elif t < 9.0:
         draw_speed_lines(draw, cx, cy, color=NEON_PINK)
-        draw_character_leo(draw, cx, cy, pulse=pulse)
+        draw_character_leo(img, cx, cy, pulse=pulse)
 
         # Character Card Overlay
         draw.polygon([(0, 1250), (WIDTH, 1180), (WIDTH, 1550), (0, 1620)], fill=(30, 18, 32), outline=NEON_PINK, width=6)
@@ -166,7 +128,7 @@ def render_frame(frame_idx: int) -> Image.Image:
     # 4. CHARACTER 3: MR. BALDEV GUPTA (9.0s - 12.0s)
     elif t < 12.0:
         draw_speed_lines(draw, cx, cy, color=FLAME_RED)
-        draw_character_gupta(draw, cx, cy, pulse=pulse)
+        draw_character_gupta(img, cx, cy, pulse=pulse)
 
         # Character Card Overlay
         draw.polygon([(0, 1250), (WIDTH, 1180), (WIDTH, 1550), (0, 1620)], fill=(45, 15, 15), outline=FLAME_RED, width=6)
@@ -178,15 +140,15 @@ def render_frame(frame_idx: int) -> Image.Image:
     else:
         # Triple Split Screen Showcase
         draw.rectangle([50, 250, 330, 1000], fill=(20, 40, 60), outline=NEON_CYAN, width=4)
-        draw_character_max(draw, 190, 500, pulse=0.6)
+        draw_character_max(img, 190, 500, pulse=0.45)
         draw.text((190, 920), "MAX", fill=NEON_CYAN, font=FONT_SUB, anchor="mm")
 
         draw.rectangle([390, 250, 670, 1000], fill=(50, 20, 40), outline=NEON_PINK, width=4)
-        draw_character_leo(draw, 530, 500, pulse=0.6)
+        draw_character_leo(img, 530, 500, pulse=0.45)
         draw.text((530, 920), "LEO", fill=NEON_PINK, font=FONT_SUB, anchor="mm")
 
         draw.rectangle([730, 250, 1010, 1000], fill=(60, 30, 20), outline=FLAME_RED, width=4)
-        draw_character_gupta(draw, 870, 500, pulse=0.6)
+        draw_character_gupta(img, 870, 500, pulse=0.45)
         draw.text((870, 920), "GUPTA", fill=FLAME_RED, font=FONT_SUB, anchor="mm")
 
         # CTA Card
